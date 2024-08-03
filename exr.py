@@ -91,7 +91,10 @@ def write(img, filename, channels="RGB"):
     if img.dtype is not np.float16:
         img = img.astype(np.float16)
 
-    h, w = img.shape[:2]
+    h, w = img.shape[:2] if len(img.shape) > 2 else img.shape
+    num_channels = 1 if len(img.shape) == 2 else img.shape[2]
+    if num_channels != 3 and num_channels != 1:
+        channels = '0123456789abcedfghijklmnopqrstuvwxyz'[:num_channels]
 
     header = OpenEXR.Header(w, h) ##! the xy is transposed in dataWindow
     half_chan = Imath.Channel(Imath.PixelType(Imath.PixelType.HALF))
